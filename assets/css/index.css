@@ -1,0 +1,28 @@
+@charset "utf-8";
+
+.search{
+    padding:5px 10px;
+    width: 300px;
+    line-height: 24px;
+    box-sizing: border-box;
+}
+.result__list{
+    box-sizing:border-box;
+}
+
+.result__list ul{
+    padding: 0;
+    margin: 0;
+    line-height: 24px;
+    font-size: 14px;
+}
+.result__list li{
+    display:inline-block;
+    padding:5px 10px;
+    border:1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.result__list li:last-child{
+    box-sizing:border-box;
+}
