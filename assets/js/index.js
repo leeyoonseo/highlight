@@ -20,7 +20,7 @@
                     createList(DATA);
 
                     /* 검색후 highlight */
-                    // var highlightData = SearchHighlight.set(JSON.parse(DATA), '점심');
+                    // var highlightData = SearchHighlight.set(JSON.parse(DATA), 'M');
                     // createList(highlightData);
 
                 }else{
