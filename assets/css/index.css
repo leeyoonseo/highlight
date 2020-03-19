@@ -26,3 +26,9 @@
 .result__list li:last-child{
     box-sizing:border-box;
 }
+
+.highlight2{
+    background:red;
+    color:#fff;
+    font-weight:700;
+}

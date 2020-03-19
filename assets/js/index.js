@@ -4,8 +4,21 @@
     var DATA;
     var search = document.getElementById('search');
 
+    // @requires searchJS
+    var searchJS = window.searchJS;
+
     ajax();
 
+    // 검색
+    // @requires searchJS
+    search.addEventListener('input', function(e){
+        var word = e.target.value;
+        var searchData = searchJS.search(word);
+        
+        createList(searchData);
+    });
+
+    // @see ./test.json
     function ajax(){
         var req = new XMLHttpRequest();
 
@@ -18,9 +31,11 @@
 
                     createList(DATA);
 
-                    /* 검색후 highlight */
-                    searchJS.setting(DATA);
-
+                    // 검색 세팅
+                    // @requires searchJS
+                    searchJS.setting(DATA, { 
+                        className : 'highlight2' 
+                    });
 
                 }else{
                     console.log('Error');
@@ -32,7 +47,7 @@
         req.send();
     }
 
-    /* 대상 List 생성 */
+    // 데이터로 리스트 돔 생성
     function createList(data){
         if(!data) return false;
 
@@ -61,21 +76,5 @@
 
         result.appendChild(ulNode);
     }
-
-
-    /* 검색 input */
-    search.addEventListener('input', function(e){
-        var word = e.target.value;
-
-        if(word === ''){
-            createList(DATA);
-
-        }else{
-            var searchData = searchJS.search(word);
-            createList(searchData);
-
-        }
-    });
-
     
 })();
