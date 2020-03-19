@@ -2,7 +2,6 @@
     'use strict';
 
     var DATA;
-    var SearchHighlight = window.SearchHighlight;
     var search = document.getElementById('search');
 
     ajax();
@@ -20,8 +19,8 @@
                     createList(DATA);
 
                     /* 검색후 highlight */
-                    // var highlightData = SearchHighlight.set(JSON.parse(DATA), 'M');
-                    // createList(highlightData);
+                    searchJS.setting(DATA);
+
 
                 }else{
                     console.log('Error');
@@ -72,7 +71,7 @@
             createList(DATA);
 
         }else{
-            var searchData = SearchHighlight.set(JSON.parse(DATA), word);
+            var searchData = searchJS.search(word);
             createList(searchData);
 
         }

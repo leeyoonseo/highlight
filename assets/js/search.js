@@ -1,3 +1,10 @@
+/**
+ * SearchJS
+ * @author yoonseo.lee <okayoon.lee@gmail.com>
+ * @version 1.0.0
+ * @since 2020.03
+ * @file 검색 / 검색 하이라이트 js
+ */
 (function(global, factory){
     'use strict';
 
@@ -8,7 +15,7 @@
         define(factory);
 
     }else{
-        global.SearchHighlight = factory();
+        global.searchJS = factory();
     }
 
 })(this, function(){
@@ -18,34 +25,38 @@
         targetKey : 'subject'
     }
 
+    var originData;
 
-    var _set = function(listData, word, newOpts){       
-        if(!listData || word === '' || typeof word !== 'string') return false;
+    // 초기 세팅
+    var _setting = function(data, userOpt){
+        if(!data) {
+            return false;  
+        } 
 
-        if(typeof listData === 'string'){
-            listData = JSON.parse(listData);
+        if(typeof data === 'string') {
+            data = _stringToObject(data);
         }
 
-        if(newOpts){
-            // _setOptions();
-
-            options = Objcet.assign({}, newOpts, options);
-
+        if(userOpt) {
+            _setOptions(userOpt);
         }
-        
-        var originData = _copyObject(listData);
+
+        originData = _copyObject(data);
+    };
+
+    var _search = function(word){
         var originWord;
-        var searchData = [];
+        var resultData = [];
 
         var targetStr;
         var targetKey = options.targetKey;
+
         var wordToLowerCase = word.toLowerCase();
         var wordMinify = wordToLowerCase.split(' ').join('');
 
         var sameWord; // 공백 무시하고 같다
-        var samePerfectWord; // 공백 포함 같다
-
         var sameWordIndex;
+        var samePerfectWord; // 공백 포함 같다
 
         originData.map(function(obj){
             targetStr = obj[targetKey]
@@ -60,24 +71,33 @@
 
                 // 공백 포함
                 if(samePerfectWord){
-                    console.log('포함');
                     sameWordIndex = targetStrToLowerCase.indexOf(wordToLowerCase);
                     originWord = targetStr.substr(sameWordIndex, word.length);
 
-                    searchData.push({
+                    resultData.push({
                         [targetKey.toString()] : _setHighlightText(targetStr, originWord)
                     })  
 
                 // 공백 안 포함
                 }else{
-                    console.log('안포함');
-                    searchData.push({
+                    resultData.push({
                         [targetKey.toString()] : targetStr
                     })  
                 }
             }
         });
-        return searchData;
+
+        return resultData;
+    };
+
+     // 옵션 세팅하기
+    function _setOptions(userOpt){
+        options = Objcet.assign({}, userOpt, options);
+    }
+
+    // string 데이터를 obj로
+    function _stringToObject(data){
+        return JSON.parse(data);
     }
 
     // 하이라이트태그 텍스트 추출
@@ -88,8 +108,7 @@
                     .join('<span class="' + className + '">' + originWord + '</span>');
     }
 
-
-    // [TODO] options.. color...font-size..background.. or className...
+    // [TODO] 옵션줄수있게해보자!! class나 true-false로 할수있고 없고
     function _setOptions(){
         console.log('options이 있다.');
     }
@@ -110,6 +129,7 @@
     }
 
     return {
-        set : _set
+        setting : _setting,
+        search : _search
     };
 });
