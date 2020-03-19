@@ -13,65 +13,79 @@
 
 })(this, function(){
 
-    var set = function(listData, word, options){       
+    var options = {
+        className : 'highlight',
+        targetKey : 'subject'
+    }
+
+
+    var _set = function(listData, word, newOpts){       
         if(!listData || word === '' || typeof word !== 'string') return false;
 
         if(typeof listData === 'string'){
             listData = JSON.parse(listData);
         }
 
-        if(options){
-            _setOptions();
+        if(newOpts){
+            // _setOptions();
+
+            options = Objcet.assign({}, newOpts, options);
+
         }
         
         var originData = _copyObject(listData);
         var originWord;
         var searchData = [];
-        var hasWordIndex;
-        var hasHighlightIndex;
 
-        for(var i in originData){
-            subject = originData[i].subject;
-            subjectToLowerCase = subject.toLowerCase();
-            hasWordIndex = subject.indexOf(word.toLowerCase());
-            hasHighlightIndex = subject.indexOf(word.toLowerCase());
- 
-            if(hasWordIndex >= 0){
-                console.log(subject);
+        var targetStr;
+        var targetKey = options.targetKey;
+        var wordToLowerCase = word.toLowerCase();
+        var wordMinify = wordToLowerCase.split(' ').join('');
 
-                if(hasHighlightIndex >= 0){
-                    originWord = subject.substr(hasWordIndex, word.length);
+        var sameWord; // 공백 무시하고 같다
+        var samePerfectWord; // 공백 포함 같다
+
+        var sameWordIndex;
+
+        originData.map(function(obj){
+            targetStr = obj[targetKey]
+            targetStrToLowerCase = targetStr.toLowerCase();
+            targetStrMinify = targetStrToLowerCase.split(' ').join('');
+
+            sameWord = targetStrMinify.match(wordMinify);
+
+            // 공백을 무시하고 검색
+            if(sameWord){
+                samePerfectWord = targetStrToLowerCase.match(wordToLowerCase);
+
+                // 공백 포함
+                if(samePerfectWord){
+                    console.log('포함');
+                    sameWordIndex = targetStrToLowerCase.indexOf(wordToLowerCase);
+                    originWord = targetStr.substr(sameWordIndex, word.length);
+
                     searchData.push({
-                        "subject" : subject.split(originWord).join('<span class="highlight">' + originWord + '</span>')
-                    });
-                    console.log(1);
+                        [targetKey.toString()] : _setHighlightText(targetStr, originWord)
+                    })  
+
+                // 공백 안 포함
                 }else{
+                    console.log('안포함');
                     searchData.push({
-                        "subject" : subject
-                    })
-                    console.log(2);
-                }
-            }else{
-                hasWordIndex = subject.split(' ').join('').indexOf(word.toLowerCase());
-                if(hasWordIndex >= 0){
-                    console.log(3);
-                    if(hasHighlightIndex >= 0){
-                        originWord = subject.substr(hasWordIndex, word.length);
-                        searchData.push({
-                            "subject" : subject.split(originWord).join('<span class="highlight">' + originWord + '</span>')
-                        });
-                        console.log(4);
-                    }else{
-                        searchData.push({
-                            "subject" : subject
-                        })
-                        console.log(5);
-                    }
+                        [targetKey.toString()] : targetStr
+                    })  
                 }
             }
-        }
-
+        });
         return searchData;
+    }
+
+    // 하이라이트태그 텍스트 추출
+    function _setHighlightText(text, originWord, className){
+        var className = className || 'highlight';
+
+        return text.split(originWord)
+                    .join('<span class="' + className + '">' + originWord + '</span>');
     }
 
 
@@ -80,6 +94,7 @@
         console.log('options이 있다.');
     }
 
+    // object 복사
     function _copyObject(obj){
         if (obj === null || typeof obj !== 'object') return obj;
 
@@ -95,6 +110,6 @@
     }
 
     return {
-        set : set
+        set : _set
     };
 });

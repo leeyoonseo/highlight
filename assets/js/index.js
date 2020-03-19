@@ -72,8 +72,8 @@
             createList(DATA);
 
         }else{
-            var highlightData = SearchHighlight.set(JSON.parse(DATA), word);
-            createList(highlightData);
+            var searchData = SearchHighlight.set(JSON.parse(DATA), word);
+            createList(searchData);
 
         }
     });
