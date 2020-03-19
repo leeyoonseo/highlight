@@ -54,23 +54,23 @@
         var wordToLowerCase = word.toLowerCase();
         var wordMinify = wordToLowerCase.split(' ').join('');
 
-        var sameWord; // 공백 무시하고 같다
-        var sameWordIndex;
-        var samePerfectWord; // 공백 포함 같다
+        var sameWordIndex; // 공백 무시 텍스트 같다.
+        var samePerfectWordIndex; // 공백 포함 같다.
 
         originData.map(function(obj){
             targetStr = obj[targetKey]
             targetStrToLowerCase = targetStr.toLowerCase();
             targetStrMinify = targetStrToLowerCase.split(' ').join('');
 
-            sameWord = targetStrMinify.match(wordMinify);
+            
+            sameWordIndex = targetStrMinify.indexOf(wordMinify); 
 
             // 공백을 무시하고 검색
-            if(sameWord){
-                samePerfectWord = targetStrToLowerCase.match(wordToLowerCase);
+            if(sameWordIndex >= 0){
+                samePerfectWordIndex = targetStrToLowerCase.indexOf(wordToLowerCase);
 
                 // 공백 포함
-                if(samePerfectWord){
+                if(samePerfectWordIndex >= 0){
                     sameWordIndex = targetStrToLowerCase.indexOf(wordToLowerCase);
                     originWord = targetStr.substr(sameWordIndex, word.length);
 
